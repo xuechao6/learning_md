@@ -20,6 +20,13 @@
 printf（%s，str） ------ printf（%s，str.c_str()）
 ```
 
+3.想在字符串的引号内保留引号，需要用到转义字符，例如希望`a 的值为"hello"`，用`string a = "\"hello\""`
+
+```c++
+std::string a = "\"hello\"";
+std::cout << a << std::endl; // 输出："hello"
+```
+
 
 
 ## 2.结构体struct

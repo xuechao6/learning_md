@@ -56,14 +56,17 @@
 
 1. **修改msg和总cmake：**在msg文件夹下创建自定义的msg文件，并且在msg文件夹下找到Cmakelists.txt文件，把自定义的文件注册到里面去
 
+   - 必须在自定义消息中首先添加`uint64 timestamp`
+   - 没有string的消息类型？
+
 2. `make px4_fmu-v5_default`编译以后，产生`/PX4_Firmware/build/px4_fmu-v5_default/uORB/topics/vehicle_acceleration.h`头文件
 
 3. **源代码内容和cmakelists**：在src目录下的随便一个文件夹内（一般在modules或者example），创建一个发布者（订阅者）文件夹，内部存放自定义的发布者（订阅者）代码，并创建cmakelists.txt文件。
 
    **注意**：
 
-   - 在发布（订阅）者文件中`struct test_urod_s 实例化对象 `，`test_urod_s`实际上式系统自己生成的，主要在msg文件中存入`test_urod`的消息，就会自动生成这个结构体，和ros的区别是使用时多一个`_s`后缀。
-   - 需要包含头文件，make编译以后，产生在`/PX4_Firmware/build/px4_fmu-v5_default/uORB/topics/vehicle_acceleration.h`，包含的头文件形式例如`#include <uORB/topics/vehicle_acceleration.h>`
+   - 在发布（订阅）者文件中`struct test_urod_s 实例化对象 `，`test_urod_s`实际上式系统自己生成的，只要在msg文件中存入`test_urod`的消息，就会自动生成这个结构体，和ros的区别是使用时多一个`_s`后缀。
+   - 需要在发布者文件中包含头文件，make编译以后，产生在`/PX4_Firmware/build/px4_fmu-v5_default/uORB/topics/vehicle_acceleration.h`，包含的头文件形式例如`#include <uORB/topics/vehicle_acceleration.h>`
    - cmakelist文件编写可以参考px4官方指导手册
 
 4. **修改总的编译脚本**：在总的编译脚本（看目录）里，添加`CONFIG_文件路径_文件名称=y`的一行话，告诉编译器要编译这个文件
@@ -115,6 +118,10 @@
 
 # Mavlink：
 
+任务一：研究modules文件夹下创建新的模块，如何启用自定义的文件，附带命令行烧录
+
+任务二：mavlink自定义消息类型修改，查询资料
+
 PX4-Autopilot\src\modules\mavlink\mavlink_main.cpp文件中的1400行开始，configure_stream_local函数是配置发送的数据频率，括号里面的数字表示一秒钟发送几次，越小表示发送越慢，越大表示发送越快，发送越快，对数据传输压力和载荷量较大，会造成发送距离较近的结果，平常使用时，可以删除一些不需要的消息包，增大发送距离。
 
 心跳包heartbeat发送位置在2183行，不断发送更新的代码在2443行stream->update(t)
@@ -125,13 +132,21 @@ PX4-Autopilot\src\modules\mavlink\mavlink_main.cpp文件中的1400行开始，co
 
 自定义mavlink流程，第21节课程
 
+
+
+写xml文件，借助第三方工具，生成对应的h头文件，在common.h中调用该头文件
+
 写一个自己发送的消息类，模仿其他mavlink自带的数据类别，模仿的数据消息的类放在mavlink文件夹下的stream文件夹下
 
 将类添加到待发送的链表中，链表的位置在mavlink文件夹下的mavlink_messages.cpp文件中250行
 
-需要在main函数中用configure_stream将待发送的消息及其频率加入到`case MAVLINK_MODE_NORMAL`里面
+需要在mavlink.cpp中tset_main函数中用configure_stream将待发送的消息及其频率加入到`case MAVLINK_MODE_NORMAL`里面，在switch case括号外面写
 
 
+
+
+
+地面端发送到天空端飞控后，飞控进行数据接收和解析 23节后半段
 
 在编译过的mavlink文件夹下，看看有没有include、mavlink 版本 common
 
