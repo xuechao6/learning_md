@@ -2,7 +2,9 @@
 
 [Git 教程 | 菜鸟教程 (runoob.com)](https://www.runoob.com/git/git-tutorial.html)
 
-## github上传仓库的流程：
+
+
+## **上传流程：**
 
 **第一次操作**
 
@@ -22,7 +24,45 @@
 
 
 
-## git branch
+## **拉取流程**：
+
+`git pull origin main`将远程仓库的文件拉取到本地，前提是要配置好个人账号，文件夹和仓库的对应关系
+
+
+
+## 远程仓库：
+
+删除分支
+
+```
+git push origin --delete new_branch
+```
+
+合并分支：进入主分支，输入待合并的分支
+
+```
+git merge new_branch
+```
+
+拉取远程仓库文件，`origin`是仓库名（默认的），`main`是分支
+
+```
+git pull origin main
+```
+
+
+
+## 本地仓库：
+
+```
+git branch -D new_branch
+```
+
+
+
+## git命令：
+
+### git branch
 
 1.查看当前分支，当前所在的分支会有一个前缀 `*`，例如：
 
@@ -46,7 +86,7 @@ git branch -D new_branch
 
 
 
-## git checkout
+### git checkout
 
 1.切换分支，在` git branch`之后，显示的分支中，设置想要切换的分支，上个例子中
 
@@ -68,7 +108,7 @@ git checkout V1.13.2
 
 
 
-## git describe
+### git describe
 
 查看当前项目版本号：
 
@@ -78,7 +118,7 @@ git describe --tags
 
 
 
-## git add
+### git add
 
 将本地文件夹上传到暂存区
 
@@ -100,7 +140,7 @@ git rm -r --cached 文件夹
 
 
 
-## git ls-files
+### git ls-files
 
 查看暂存区的文件
 
@@ -110,7 +150,7 @@ git ls-files
 
 
 
-## git commit
+### git commit
 
 缓冲区提交到本地仓库中，ubuntu下是单引号，
 
@@ -120,7 +160,7 @@ git commit -m "windows修改的说明"  / 'linux修改的说明'
 
 
 
-## git tag
+### git tag
 
 本地创建新的tag版本
 
@@ -135,26 +175,4 @@ git push origin --tag
 ```
 
 
-
-## 远程仓库
-
-删除分支
-
-```
-git push origin --delete new_branch
-```
-
-合并分支：进入主分支，输入待合并的分支
-
-```
-git merge new_branch
-```
-
-
-
-## 本地仓库
-
-```
-git branch -D new_branch
-```
 
