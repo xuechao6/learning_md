@@ -26,7 +26,28 @@
 
 ## **拉取流程**：
 
-`git pull origin main`将远程仓库的文件拉取到本地，前提是要配置好个人账号，文件夹和仓库的对应关系
+方法一：`git pull origin main`将远程仓库的文件拉取到本地，前提是要配置好个人账号，文件夹和仓库的对应关系
+
+方法二：`git fetch`把远程仓库所有的分支都拉取下来，然后再用`git checkout`切换版本
+
+**可能会出现的报错**：
+
+git checkout命令报错Your local changes to the following files would be overwritten by checkout
+
+[git checkout命令报错Your local changes to the following files would be overwritten by checkout_error: your local changes to the following files w-CSDN博客](https://blog.csdn.net/weixin_44589540/article/details/105334650)
+
+```c++
+//针对报错的问题
+//第一种方式 存到暂存区
+git add.
+git stash 
+//取出的时候使用 
+git stash pop
+
+//第二种方式 发起一个commit 存到提交历史
+git add.
+git commit -m "commit message"
+```
 
 
 
