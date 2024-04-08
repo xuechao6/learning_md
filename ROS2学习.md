@@ -1,4 +1,43 @@
-# ROS2学习
+# **ROS2学习**
+
+# 一、功能包
+
+## 1.创建工作空间
+
+```
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+```
+
+## 2.创建功能包
+
+```
+ros2 pkg create --build-type ament_cmake (--node-name <node_name>) <package name>
+```
+
+`--node-name <node_name>`这一项可以省略，之后在cmakelist文件里面自己配置
+
+# 二、话题通信
+
+## 1.节点配置
+
+**流程：**
+
+1. `main`函数传参
+2. 初始化节点
+3. 
+
+`int main(arg, *argv[])`表示参数的传递
+
+
+
+## 2.订阅者
+
+## 3.发布者
+
+## 4.CmakeLists编写
+
+# 三、服务通信
 
 ## Qos问题：
 

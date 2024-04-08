@@ -1129,14 +1129,14 @@ STL六大组件：容器、算法、迭代器、仿函数、适配器、空间�
 
 1. 容器：各种数据结构，如vector、list、deque、set、map等,用来存放数据。
 2. 算法：各种常用的算法，如sort、find、copy、for_each等
-3. 迭代器：扮演了容器与算法之间的胶合剂。
+3. 迭代器：扮演了容器与算法之间的胶合剂。也称为函数对象
 4. 仿函数：行为类似函数，可作为算法的某种策略。
 5. 适配器：一种用来修饰容器或者仿函数或迭代器接口的东西。
 6. 空间配置器：负责空间的配置与管理。
 
 
 
-## 2.string容器：
+## string容器：
 
 1. 赋值操作：`=或者成员函数assign("aaa")`
 2. 拼接操作：`(str3 = str1 + str2)或者成员函数append("aaa")`，注意**不能直接用两个字符串"ab"+"cd"的方式**，可以将ab和cd分别赋值给str1和str2再用**+**拼接
@@ -1149,11 +1149,13 @@ STL六大组件：容器、算法、迭代器、仿函数、适配器、空间�
 9. 删除操作：`成员函数erase(int 指定的位置，int删除的字符长度)`，位置索引是从0开始
 10. 从字符串中获取子串：`成员函数substr(int 开始截取的位置，int 截取长度)`，位置索引是从0开始，返回值是string
 
-## ------单端双端容器------
+## **2.单端双端容器**
 
-## 3.vector容器：
+## vector容器：
 
 ==单端容器，尾部容器，前端封口。支持随机访问迭代器==
+
+**迭代器的类型定义可以简化用`auto`自动推导**
 
 <img src="picture\clip_image002-17098024178971.jpg">
 
@@ -1284,7 +1286,7 @@ void test02()
 
 
 
-## **4.deque容器**
+## deque容器
 
 ==双端容器，支持随机访问迭代器==
 
@@ -1324,11 +1326,11 @@ void test02()
 
 不支持随机访问迭代器的容器，往往内部支持成员函数算法
 
-## ------栈和队列------
+## **3.栈和队列**
 
 ==**没有迭代器，只能访问固定元素**==，无法遍历，无迭代器
 
-## 5.stack容器
+## stack容器
 
 ==**单端栈，先进后出，不支持迭代器**==，只有头部数据才能被访问到，其他位置无法访问，除非依次弹出。压入数据叫做入栈，弹出数据叫做出栈
 
@@ -1346,7 +1348,7 @@ void test02()
 
 
 
-## **6.queue容器**
+## **queue容器**
 
 ==**队列，先进先出，不支持迭代器**==，只支持访问头部和尾部元素，，只有队头和队尾才可以被外界使用，因此队列不允许有遍历行为
 
@@ -1363,9 +1365,9 @@ void test02()
 - `empty();`            //判断堆栈是否为空
 - `size(); `              //返回栈的大小
 
-## ------链表------
+## **4.链表**
 
-## 7.list容器
+## list容器
 
 ==**链表容器，不支持随机访问迭代器，只支持双向迭代器**==，迭代器只能`it++`，不能`it=it+2`
 
@@ -1428,11 +1430,11 @@ int main()
 
 
 
-## ------二叉树------
+## **5.排序容器**
 
-## 8.set/multiset容器
+## set/multiset容器
 
-**1.特征**：
+**1.特点**：
 
 - `set`容器插入数据时，会自动根据数据的大小排序，按照从小到大插入
 - `set`容器插入重复值不算，只会记录一个；`multiset`可以插入重复值，使用时只用包含`#include <set>`即可
@@ -1440,19 +1442,35 @@ int main()
 **2.接口：**
 
 - 构造函数：默认构造和有参构造
+
 - `size();`          //返回容器中元素的数目
+
 - `empty();`        //判断容器是否为空
+
 - `swap(st);`      //交换两个集合容器
+
 - `insert(elem);`           //在容器中插入元素，和其他的容器不一样，没有==**push**==的操作
+
 - `clear();`                    //清除所有元素
+
 - `erase(pos);`              //删除pos迭代器所指的元素，返回下一个元素的迭代器。
+
 - `erase(beg, end);`     //删除区间[beg,end)的所有元素 ，返回下一个元素的迭代器。
+
 - `erase(elem);`            //删除容器中值为elem的元素。
+
 - ==独有属性==
-- `find(key);`                  //查找key是否存在，k是一个具体数值，若存在，返回该键的元素的迭代器；若不存在，返回set.end();
-- `count(key);`                //统计key的元素个数
+
+- `find(key);`                  //查找key是否存在，k是一个具体数值（自定义的数据不好使），若存在，返回该键的元素的**迭代器**；若不存在，返回set.end();可以通                  
+
+  ​                                       过返回的迭代器计数，得到元素的位置索引index
+
+- `count(key);`                //`set`中统计key的元素个数，要么是1，要么是0，可以用来判断容器中是否有这个数据，`multiset`可以统计出多个数据
+
 - ==对组`pair`创建方式==
+
 - `pair<type, type> p ( value1, value2 );` //尖括号里面的两个数据类型可以不相同
+
 - `pair<type, type> p = make_pair( value1, value2 );`
 
 **3.改变默认排序顺序**
@@ -1503,4 +1521,158 @@ int main()
     set<people,fanghanshu> s;
 }
 ```
+
+
+
+## map/multimap容器
+
+**特点**：
+
+- 容器元素都是对组pair
+- 插入值是key和value
+- 根据key自动排序，数字类型默认按照从小到大排序，字符串默认按照首字母的ASCII排序
+- `map`的key键值不能相同，value可以相同；`multimap`的key键值可以相同
+- **迭代器的类型定义可以简化用`auto`自动推导**
+
+**map容器接口：**
+
+- 构造函数：默认构造+拷贝构造
+
+- `size();`          //返回容器中元素的数目
+
+- `empty();`        //判断容器是否为空
+
+- `swap(st);`      //交换两个集合容器
+
+- `insert(elem);`           //在容器中插入元素，元素==**必须是对组形式**==，三种插入方式：
+
+     								1：`m.insert(pair<int,int>(1,10))` 2：`m.insert(make_pair<1,10>)` 3：`m[1]=10`,方括号内表示key，等号后表示value
+
+- ==`key的索引：[]`            //`m[2]`便可访问key为2的value，`m["a"]`便可访问key为“a”的value==
+
+- `clear();`                    //清除所有元素
+
+- `erase(pos);`              //删除pos迭代器所指的元素，返回下一个元素的迭代器
+
+- `erase(beg, end);`    //删除区间[beg,end)的所有元素 ，返回下一个元素的迭代器
+
+- ==`erase(key);`            //删除容器中值为key的元素==，可以根据key值删除元素
+
+- `find(key);`                  //查找key是否存在,若存在，返回该键的元素的迭代器；若不存在，返回set.end()，end()都是指向最后一个元素的下一个元素
+
+- `count(key);`                //统计key的元素个数
+
+- 排序：自定义仿函数
+
+```c++
+void printm(map<int,int>m)
+{
+    for(map<int,int>::iterator it=m.begin();it!=m.end();it++)
+    {
+        cout<<"key: "<<(*it).first<<" value: "<<it->second<<endl;
+    }
+    cout<<endl;
+}
+//仿函数自定义排序
+class fanghanshu
+{
+public:
+    bool operator()(int a,int b)
+    {
+        return a>b;
+    }
+};
+void printm(map<int,int,fanghanshu>m)
+{
+    for(map<int,int,fanghanshu>::iterator it=m.begin();it!=m.end();it++)
+    {
+        cout<<"key: "<<(*it).first<<" value: "<<it->second<<endl;
+    }
+    cout<<endl;
+}
+void test01()
+{
+    map<int,int> m;
+    //insert插入格式
+    m.insert(pair<int,int>(1,10));
+    m.insert(make_pair(4,20));
+    m[3]=30;
+    printm(m);
+    cout<<"大小为："<<m.size()<<endl;
+    //empty
+    if(!m.empty())
+    {
+        cout<<"容器不为空"<<endl;
+    }
+    //swap
+    cout<<"交换后"<<endl;
+    map<int,int>m2(m);
+    m2[10]=10;
+    m2.swap(m);
+    printm(m);
+    //erase
+    m.erase(10);
+    printm(m);
+    //find
+    map<int,int>::iterator pos = m.find(3);
+    if(pos!=m.end())
+    {
+        cout<<"该元素的value为："<<pos->second<<endl;
+    }
+    else
+    {
+        cout<<"容器中没有这个元素"<<endl;
+    }
+    //count
+    cout<<"key相对应的元素个数为： "<<m.count(2)<<endl;
+    //倒叙
+    map<int,int,fanghanshu> m3;
+    m3.insert(make_pair(1,10));
+    m3.insert(make_pair(2,20));
+    m3.insert(make_pair(3,30));
+    m3.insert(make_pair(4,40));
+    m3.insert(make_pair(5,50));
+    printm(m3);
+    cout<<"key为三对应的value为："<<m3[3]<<endl;
+}
+```
+
+**multimap接口：**
+
+有`map`容器的所有接口，区别是可以插入相同的键值，因此在访问键值对应value时候，有些区别
+
+- `equal_range(key)`          //返回值是一个pair类型的迭代器，表示找到同一个key值对应的所有value的元素区间，因为会自动排序，所以区间是连续起来的。										用`.first`访问起始，用`.second`访问结束
+
+```c++
+void test02()
+{
+    multimap<int,int> mm;
+    mm.insert(pair<int,int>(10,20));
+    mm.insert(pair<int,int>(10,30));
+    mm.insert(pair<int,int>(10,40));
+    mm.insert(pair<int,int>(10,50));
+    mm.insert(pair<int,int>(10,60));
+    printm(mm);
+    //查找
+    auto pos_all = mm.equal_range(10); //返回值是pair类型的迭代器
+    //遍历同一个key值对应的所有的value值
+    for(auto it=pos_all.first;it!=pos_all.second;it++)
+    {
+        cout<<"key=10对应的value: "<<it->second<<endl;
+    }
+}
+```
+
+
+
+## 6.函数对象（仿函数）
+
+**定义**：本质是一个公共类，在类内定义函数，重载`()`运算符
+
+有两种用处，用处一：提供给`set`和`map`插入自定义数据时使用，用处二：在标准算法里使用
+
+- 用法一：`set<people , fanghanshu>`，直接写类名
+- 用法二：`sort(v.begin() , v.end() , fanghanshu())`，第三个变量需要写仿函数对象，可以不用实例化，直接写匿名函数对象、
+
+谓词返回值必须是bool，仿函数的呢？，有没有哪些算法的要求必须是谓词，谓词在c++中的简写是什么？vscode怎么查看算法的输入重载参数
 
