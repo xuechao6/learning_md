@@ -237,3 +237,88 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 - `-x` 后面的为要在打开的终端中执行的脚本，根据需要自己修改就行了
 - `exec bash;` 是让打开的终端在执行完脚本后不关闭
 - ` bash -c` 执行shell命令
+
+
+
+## 查找/结束进程
+
+`ps aux | grep 软件`：查看当前ubuntu系统该软件的进程，例如`ps aux | grep gz`，举例输出为：
+
+```
+bit         3658  0.8  0.9 1177605916 157832 ?   SLl  11:33   0:02 /usr/share/code/code --unity-launch /home/bit/work/sim/gz_model/models/missile/model.sdf
+bit         7967  0.0  0.0  12328  2496 pts/0    S+   11:37   0:00 grep --color=auto gz
+```
+
+这个情况就是有两个进程运行，一个是软件没有结束的，另一个是grep调起来的
+
+进程一：`missile/model.sdf`一直在运行，3658是第一个的进程标识符（PID），使用`kill 3658`结束该进程；
+
+进程二：第二个不算，是grep调用的gz进程，使用grep查找会自动调起来这个相关的进程
+
+
+
+## CMake编写
+
+vscode和cmake联合配置：https://blog.csdn.net/TU_Dresden/article/details/122414454
+
+标准的一套流程：
+
+```cmake
+#最低版本要求：必须
+cmake_minimum_required(VERSION 3.0)
+#项目名称，版本：必须
+project(My_test_project)
+
+############非必须##############
+#导入第三方库：非必须
+find_package(库的名称 REQUIRED)  # REQUIRED 参数表示如果找不到会报错
+#将第三方库的头文件添加到项目路径下
+include_directories(库名称_INCLUDE_DIRS)
+############非必须##############
+
+#导入自己的include文件夹下的头文件
+include_directories(include)  #将指定的目录添加到项目的包含路径
+#添加可执行文件：必须
+add_executable(想生成的可执行文件 源文件1.cpp 源文件2.cpp)
+#不同的源文件是多文件调用的情况。只有一个文件中有main函数，其他文件中是函数的实现，
+
+############非必须##############
+#链接可执行文件和库文件：如果有第三方库，就需要链接
+target_link_libraries(想生成的可执行文件 ${库名称1_LIBRARIES} ${库名称1_LIBRARIES})
+############非必须##############
+```
+
+文件流程：
+
+```css
+project_Mytest/
+│
+├── CMakeLists.txt
+│
+├── include/
+│   ├── header1.h
+│   ├── header2.h
+│   └── header3.h
+│
+└── src/
+    ├── source1.cpp
+    ├── source2.cpp
+    ├── source3.cpp
+    └── source4.cpp
+```
+
+编写流程：
+
+```
+####创建
+mkdir -p not_ros_ws/src
+cd not_ros_ws
+mkdir build
+mkdir include
+
+####编译
+cd build
+cmake ..
+make
+```
+

@@ -30,6 +30,8 @@
 
 方法二：`git fetch`把远程仓库所有的分支都拉取下来，然后再用`git checkout`切换版本
 
+方法三：不保留本地修改--`git reset --hard <分支名称>`：不保留本地修改，强行把远程仓库的文件给同步过来
+
 **可能会出现的报错**：
 
 git checkout命令报错Your local changes to the following files would be overwritten by checkout
@@ -48,6 +50,8 @@ git stash pop
 git add.
 git commit -m "commit message"
 ```
+
+
 
 
 
