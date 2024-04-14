@@ -1,6 +1,6 @@
 # LINUX学习
 
-## cat命令
+## 1.cat命令
 
 1. 显示文件内容：`cat file.txt`，将显示文件`file.txt`的内容。
 2. 连接多个文件：`cat file1.txt file2.txt`，将连接文件`file1.txt`和`file2.txt`的内容，并按顺序显示。
@@ -12,13 +12,13 @@
 
 
 
-## shell脚本
+## 2.shell脚本
 
 学习网站：[Shell 教程 | 菜鸟教程 (runoob.com)](https://www.runoob.com/linux/linux-shell.html)
 
 shell脚本对空格的要求非常严格
 
-### 1.变量
+**1.变量**
 
 **解释器**：第一行是解释器，类似规定这个脚本以什么方式运行`#!/bin/bash`
 
@@ -52,7 +52,9 @@ echo "int类型的数据为：${my_int}"
 echo ${PATH}
 ```
 
-### 2.传递参数
+
+
+**2.传递参数**
 
 获取参数的形式为`${n}`,**n** 代表一个数字，**1** 为执行脚本的第一个参数，**2** 为执行脚本的第二个参数
 
@@ -73,7 +75,9 @@ shell传递参数
 第3个参数为4
 ```
 
-### 3.流程
+
+
+**3.流程**
 
 **if函数**：
 
@@ -185,8 +189,7 @@ shell传递参数
 
   
 
-
-### 4.函数
+**4.函数**
 
   **返回值**：参数返回，可以显示加**return** 返回，如果不加，将以最后一条命令运行结果，作为返回值。 **return** 后跟数值 **n(0-255)**，用`$?`				用来接收函数的返回值，return只能返回数值，其他的不行
 
@@ -223,13 +226,13 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 
 
 
-### 5.启动其他脚本
+**5.启动其他脚本**
 
 采用`.`的方式引入其他脚本，例如`. .test_shell02.sh`，注意两个点之间需要有空格
 
 
 
-### 6.启动新的终端
+**6.启动新的终端**
 
 `gnome-terminal -t " title-name " -x bash -c " sh ./test_shell02.sh; exec bash;"`
 
@@ -240,7 +243,7 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 
 
 
-## 查找/结束进程
+## 3.查找/结束进程
 
 `ps aux | grep 软件`：查看当前ubuntu系统该软件的进程，例如`ps aux | grep gz`，举例输出为：
 
@@ -257,9 +260,99 @@ bit         7967  0.0  0.0  12328  2496 pts/0    S+   11:37   0:00 grep --color=
 
 
 
-## CMake编写
+## 4.g++
 
-vscode和cmake联合配置：https://blog.csdn.net/TU_Dresden/article/details/122414454
+```
+g++ <选项>
+```
+
+* **-o <输出文件>**：指定输出文件名。
+* **-Wall**：启用大多数警告消息。
+* **-Werror**：将警告视为错误。
+* **-std=c++XX**：指定要使用的C++语言标准（例如 `c++11`、`c++14`、`c++17`、`c++20`）。
+* **-I<目录>**：将目录添加到用于搜索头文件的目录列表中。
+* **-L<目录>**：将目录添加到用于搜索库文件的目录列表中。
+* **-l<库>**：与指定的库进行链接。
+
+举例
+
+```
+g++ -o my_program main.cpp function.cpp -I/usr/local/include/GeographicLib -L/usr/local/lib -lGeographicLib
+```
+
+* `-o my_program`：指定输出文件名为 `my_program`。
+* `main.cpp functions.cpp`：指定要编译的源文件。
+* `-I/usr/local/include/GeographicLib`：指定第三方库头文件目录 `.` 作为包含头文件的搜索路径。
+* `-L/usr/local/lib`：指定第三方库库文件目录，作为包含库文件的搜索路径。
+* `-lGeographicLib`：链接到名为 `GeographicLib` 的库文件。
+
+
+
+## 5.vscode配置
+
+在用vscode写c++项目时，构建一个项目通常有以下几种方式：
+
+* 纯g++：纯vscode编译器配置g++
+* 纯cmake：配置cmakelists，然后vscode再配置cmake
+* ros版cmake：暂时还没有配置过vscode，未来可以摸索一下
+
+首先要明白，配置vscode的目的都是**为了方便操作**，当然没有vscode配置时，也可以在ubuntu终端中运行以下命令。配置vscode就是为了方便操作，不用在终端中输入以下的东西了
+
+* 纯g++项目：编译：`g++ -o -I -L`，运行：`./可执行文件`
+* 纯cmake：编译：`mkdie build` --> `cd build` --> `cmake ..` --> `make` ，运行： `./可执行文件`
+* ros2版cmake：编译`colcon build` ，运行：`ros2 run 包名 节点名称`
+
+配置过程分为四个文件，tasks.json文件的作用是用编辑器通过g++生成可执行文件，launch.json是用于定义如何启动和配置调试器，c_cpp_properties.json是配置代码补全所需的头文件路径等一些信息，比如源文件include红色波浪线就是这个文件中的inlucdepath没有设置正确。具体的讲解可以参照https://blog.csdn.net/qq_59084325/article/details/125662393
+
+![image-20240412204617472](picture/image-20240412204617472.png)
+
+**基本参数解释：**
+
+* `"${file}"`                       当前源文件的完整路径，包含带扩展名的文件，例如`myproject(项目目录)/src/源文件.cpp`
+* `"${fileDirname}" `          当前源文件所在文件夹的路径，不包括源文件，例如`myproject(项目目录)/src`
+* `"${workspaceFolder}"`  当前工作区的路径，用vscode打开的文件夹的根路径，例如`myproject(项目目录)`
+
+**1.tasks.json配置：**
+
+生成：在cpp文件中按住`ctrl+shift+p`，在上方输入task，找到`任务：配置默认生成任务`，生成tasks.json文件
+
+编写：tasks.json需要配置`-g -o -I -L -l`这些参数
+
+* `-g`：在生成的可执行文件中包含调试信息，想要调试，就得加`-g`,`"${file}"`会自动替换成cpp源文件的路径
+* `-o`：用于指定生成的可执行文件的输出路径和名称，`"${fileDirname}"`表示当前文件的目录路径 `"${fileBasenameNoExtension}"`表示将生成的可执行文件放在与源文件相同的目录中，并且使用源文件的名称作为可执行文件的名称。可以自己定义比如`${fileDirname}/a.out`，可执行文件就是`a.out`了
+* `-I`：将后面列的==**头文件**==的**搜索路径**添加到这个项目中，一般在include文件夹下
+* `-L`：将后面列的==**库文件**==的**搜索路径**添加到这个项目中，一般是.so文件，在lib文件夹下
+* `-l`：将调用的第三方库和项目链接
+
+![image-20240414192752406](picture/image-20240414192752406.png)
+
+
+
+**2.launch.json配置：**
+
+生成：点击左侧栏运行和调试按钮，然后点击创建launch.json文件，在生成的两三行文件中点**右下角的添加配置**，选择`(gdb)启动`，生成默认的基本框架
+
+![image-20240414172508665](picture/image-20240414172508665.png)
+
+配置：两个地方需要修改，修改`program`参数，多加`preLaunchTask`参数
+
+![image-20240414194033915](picture/image-20240414194033915.png)
+
+
+
+**3.c_cpp_properties.json配置：**
+
+生成：ctrl+shift+p输入`C/C++:编辑配置`，一种是UI，一种是json，UI就是正常选择，但是要在包含模块下把第三方的头文件都包含进去，都包含进去
+
+配置：`"${workspaceFolder}"`是项目根目录，`/**`是向下逐级查找，c和c++一般选17以上
+
+![image-20240414192849800](picture/image-20240414192849800.png)
+
+
+
+## 6.纯CMake编写
+
+vscode和cmake联合配置（这个是纯用cmake构建的，没有涉及到g++的东西，vscode里的task.json就可以按照他的配置cmake make build）：https://blog.csdn.net/TU_Dresden/article/details/122414454
 
 标准的一套流程：
 
@@ -299,7 +392,6 @@ project_Mytest/
 │   ├── header1.h
 │   ├── header2.h
 │   └── header3.h
-│
 └── src/
     ├── source1.cpp
     ├── source2.cpp
@@ -321,4 +413,8 @@ cd build
 cmake ..
 make
 ```
+
+
+
+## 7.ros版cmake
 
