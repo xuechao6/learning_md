@@ -199,3 +199,6 @@ int main(int argc, char * argv[])
   odo_self_subscriber = this->create_subscription<VehicleOdometry>("/fmu/out/vehicle_odometry", rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().transient_local(), [this](const VehicleOdometry::SharedPtr msg) {topic_callback(msg);});
   ```
 
+# 四、小知识
+
+自定义消息数据中的数量，可以在回调函数中用.size()查看，例如自定义的消息为`point[] data`在接收程序中就可以用`msg->data.size()`查看一次发布了多少数据

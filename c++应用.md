@@ -140,3 +140,26 @@ for(int i=1; i<n; i++) {
 }
 ```
 
+
+
+## 4.枚举类实现switch
+
+```c++
+enum day = {mon , the , wed , thur , fri}
+day today = mon;
+switch(today)
+{
+    case mon:
+        condition;
+        break;
+    case the:
+        condition;
+        break;
+    case wed:
+        consition;
+        break;
+    default:
+        break;
+}
+```
+
