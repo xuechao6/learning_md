@@ -247,6 +247,8 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 
 `ps aux | grep 软件`：查看当前ubuntu系统该软件的进程，例如`ps aux | grep gz`，举例输出为：
 
+`kill 端口号 `杀死进程，如果实在没办法杀死，使用`kill -9 端口号`强制杀死
+
 ```
 bit         3658  0.8  0.9 1177605916 157832 ?   SLl  11:33   0:02 /usr/share/code/code --unity-launch /home/bit/work/sim/gz_model/models/missile/model.sdf
 bit         7967  0.0  0.0  12328  2496 pts/0    S+   11:37   0:00 grep --color=auto gz

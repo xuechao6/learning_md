@@ -118,6 +118,8 @@ tasks.json
 
 1.想要显示出随时间变化的效果，轨迹不断在生长
 
+思路：不断的在容器中添加新的数据，然后清除之前的画布，再次plot，然后延时
+
 ```c++
 for(int i=1; i<n; i++) {
     x.push_back(i);
@@ -134,6 +136,7 @@ for(int i=1; i<n; i++) {
         plt::xlim(0, n*n);          //设置x-axis的取值范围
         plt::title("Sample figure");//添加标题
         plt::legend();              //使得可以标注
+        plt::axis("equal") //坐标轴等比例
         //最重要的一步：延时，只有加上延时，才能在每一次循环结束后输出
         plt::pause(0.01);
     }

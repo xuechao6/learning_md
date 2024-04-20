@@ -88,7 +88,9 @@ private:
 
 数据类型：`rclcpp::TimeBase::SharedPtr timer_`
 
-数据对象：`timer_ = this->create_wall_timer(500ms , std::bind(&Publisher::timer_callback , this))`
+类的写法，数据对象：`timer_ = this->create_wall_timer(500ms , std::bind(&Publisher::timer_callback , this))`
+
+不是类的写法：`timer_ = this->create_wall_timer(chrono::millsecond(500) , timer_callback))`
 
 ### **发布者:**
 
