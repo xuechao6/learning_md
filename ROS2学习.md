@@ -204,3 +204,18 @@ int main(int argc, char * argv[])
 # 四、小知识
 
 自定义消息数据中的数量，可以在回调函数中用.size()查看，例如自定义的消息为`point[] data`在接收程序中就可以用`msg->data.size()`查看一次发布了多少数据
+
+ros获取时间
+
+```c++
+//创建接受对象
+rclcpp::Time start_time, end_time;
+//第一种，标准数据格式
+end_time = rclcpp::Clock().now(); //在Clock后面一定要加上（）
+//第二种，class类内
+start_time = this->now();
+
+//计算时间差
+double duration = end_time.second() - start_time.second(); //调用rclcpp::Time的成员函数second
+```
+

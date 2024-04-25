@@ -143,6 +143,13 @@ for(int i=1; i<n; i++) {
 }
 ```
 
+2.plot添加图例
+
+```c++
+plt::plot(x,y,{{"label","y=x+4"}}); //在变量后面加入一个map的消息，key为"label"，value为自定义的字符串。有两个花括号
+plt::legend(); //加上这个legend后才能显示图例
+```
+
 
 
 ## 4.枚举类实现switch
