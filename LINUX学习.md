@@ -323,14 +323,16 @@ g++ -o my_program main.cpp function.cpp -I/usr/local/include/GeographicLib -L/us
 * `-g`：在生成的可执行文件中包含调试信息，想要调试，就得加`-g`,`"${file}"`会自动替换成cpp源文件的路径
 * `-o`：用于指定生成的可执行文件的输出路径和名称，`"${fileDirname}"`表示当前文件的目录路径 `"${fileBasenameNoExtension}"`表示将生成的可执行文件放在与源文件相同的目录中，并且使用源文件的名称作为可执行文件的名称。可以自己定义比如`${fileDirname}/a.out`，可执行文件就是`a.out`了
 * `-I`：将后面列的==**头文件**==的**搜索路径**添加到这个项目中，一般在include文件夹下
-* `-L`：将后面列的==**库文件**==的**搜索路径**添加到这个项目中，一般是.so文件，在lib文件夹下
-* `-l`：将调用的第三方库和项目链接
+* `-L`：将后面列的==**库文件**==的**搜索路径**添加到这个项目中，在lib文件夹下。ubuntu下一般是`.so`文件，windows下一般是`.lib`后缀文件
+* `-l`：将调用的第三方库和项目链接，链接项不需要加`.lib`后缀
 
 ![image-20240414192752406](picture/image-20240414192752406.png)
 
 
 
 **2.launch.json配置：**
+
+**ubuntu配置：**
 
 生成：点击左侧栏运行和调试按钮，然后点击创建launch.json文件，在生成的两三行文件中点**右下角的添加配置**，选择`(gdb)启动`，生成默认的基本框架
 
@@ -339,6 +341,12 @@ g++ -o my_program main.cpp function.cpp -I/usr/local/include/GeographicLib -L/us
 配置：两个地方需要修改，修改`program`参数，多加`preLaunchTask`参数
 
 ![image-20240414194033915](picture/image-20240414194033915.png)
+
+**windows配置：**
+
+还要选择gdb启动，和ubuntu流程一样，但是要在多出来的`miDebuggerPath:`选项后面改成自己`MinGW`内置的gdb路径
+
+![image-20240429220616273](picture/image-20240429220616273.png)
 
 
 
