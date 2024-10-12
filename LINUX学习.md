@@ -274,7 +274,7 @@ g++ <选项>
 * **-std=c++XX**：指定要使用的C++语言标准（例如 `c++11`、`c++14`、`c++17`、`c++20`）。
 * **-I<目录>**：将目录添加到用于搜索头文件的目录列表中。
 * **-L<目录>**：将目录添加到用于搜索库文件的目录列表中。
-* **-l<库>**：与指定的库进行链接。
+* **-l<库>**：与指定的库进行链接，从`-L`中查找，库名 ，lib+库名+.so/.lib/.dll组成完整库文件名。
 
 举例
 
@@ -289,74 +289,6 @@ g++ -o my_program main.cpp function.cpp -I/usr/local/include/GeographicLib -L/us
 * `-lGeographicLib`：链接到名为 `GeographicLib` 的库文件。
 
 
-
-## 5.vscode配置
-
-在用vscode写c++项目时，构建一个项目通常有以下几种方式：
-
-* 纯g++：纯vscode编译器配置g++
-* 纯cmake：配置cmakelists，然后vscode再配置cmake
-* ros版cmake：暂时还没有配置过vscode，未来可以摸索一下
-
-首先要明白，配置vscode的目的都是**为了方便操作**，当然没有vscode配置时，也可以在ubuntu终端中运行以下命令。配置vscode就是为了方便操作，不用在终端中输入以下的东西了
-
-* 纯g++项目：编译：`g++ -o -I -L`，运行：`./可执行文件`
-* 纯cmake：编译：`mkdie build` --> `cd build` --> `cmake ..` --> `make` ，运行： `./可执行文件`
-* ros2版cmake：编译`colcon build` ，运行：`ros2 run 包名 节点名称`
-
-配置过程分为四个文件，tasks.json文件的作用是用编辑器通过g++生成可执行文件，launch.json是用于定义如何启动和配置调试器，c_cpp_properties.json是配置代码补全所需的头文件路径等一些信息，比如源文件include红色波浪线就是这个文件中的inlucdepath没有设置正确。具体的讲解可以参照https://blog.csdn.net/qq_59084325/article/details/125662393
-
-![image-20240412204617472](picture/image-20240412204617472.png)
-
-**基本参数解释：**
-
-* `"${file}"`                       当前源文件的完整路径，包含带扩展名的文件，例如`myproject(项目目录)/src/源文件.cpp`
-* `"${fileDirname}" `          当前源文件所在文件夹的路径，不包括源文件，例如`myproject(项目目录)/src`
-* `"${workspaceFolder}"`  当前工作区的路径，用vscode打开的文件夹的根路径，例如`myproject(项目目录)`
-
-**1.tasks.json配置：**
-
-生成：在cpp文件中按住`ctrl+shift+p`，在上方输入task，找到`任务：配置默认生成任务`，生成tasks.json文件
-
-编写：tasks.json需要配置`-g -o -I -L -l`这些参数
-
-* `-g`：在生成的可执行文件中包含调试信息，想要调试，就得加`-g`,`"${file}"`会自动替换成cpp源文件的路径
-* `-o`：用于指定生成的可执行文件的输出路径和名称，`"${fileDirname}"`表示当前文件的目录路径 `"${fileBasenameNoExtension}"`表示将生成的可执行文件放在与源文件相同的目录中，并且使用源文件的名称作为可执行文件的名称。可以自己定义比如`${fileDirname}/a.out`，可执行文件就是`a.out`了
-* `-I`：将后面列的==**头文件**==的**搜索路径**添加到这个项目中，一般在include文件夹下
-* `-L`：将后面列的==**库文件**==的**搜索路径**添加到这个项目中，在lib文件夹下。ubuntu下一般是`.so`文件，windows下一般是`.lib`后缀文件
-* `-l`：将调用的第三方库和项目链接，链接项不需要加`.lib`后缀
-
-![image-20240414192752406](picture/image-20240414192752406.png)
-
-
-
-**2.launch.json配置：**
-
-**ubuntu配置：**
-
-生成：点击左侧栏运行和调试按钮，然后点击创建launch.json文件，在生成的两三行文件中点**右下角的添加配置**，选择`(gdb)启动`，生成默认的基本框架
-
-![image-20240414172508665](picture/image-20240414172508665.png)
-
-配置：两个地方需要修改，修改`program`参数，多加`preLaunchTask`参数
-
-![image-20240414194033915](picture/image-20240414194033915.png)
-
-**windows配置：**
-
-还要选择gdb启动，和ubuntu流程一样，但是要在多出来的`miDebuggerPath:`选项后面改成自己`MinGW`内置的gdb路径
-
-![image-20240429220616273](picture/image-20240429220616273.png)
-
-
-
-**3.c_cpp_properties.json配置：**
-
-生成：ctrl+shift+p输入`C/C++:编辑配置`，一种是UI，一种是json，UI就是正常选择，但是要在包含模块下把第三方的头文件都包含进去，都包含进去
-
-配置：`"${workspaceFolder}"`是项目根目录，`/**`是向下逐级查找，c和c++一般选17以上
-
-![image-20240414192849800](picture/image-20240414192849800.png)
 
 
 
@@ -426,5 +358,81 @@ make
 
 
 
-## 7.ros版cmake
+## 7.ros版cmake编写
 
+
+
+## 8.查找安装的软件包
+
+```
+ dpkg -l | grep <name>
+```
+
+组合命令：
+
+`dpkg -l`：显示系统安装的软件包信息
+
+`|`：管道操作符，将前一个命令的输出（`dpkg -l`）作为后一个命令的输入（`grep`）
+
+`grep <name>`：在文件中搜索包含名称为name的所有行
+
+举例：
+
+```sh
+dpkg -l | grep webots #输入
+```
+
+```sh
+#输出
+ii  ros-foxy-webots-ros2                            2023.0.2-1focal.20230606.053955       amd64        Interface between Webots and ROS2
+ii  ros-foxy-webots-ros2-control                    2023.0.2-1focal.20230606.040139       amd64        ros2_control plugin for Webots
+ii  ros-foxy-webots-ros2-driver                     2023.0.2-1focal.20230606.035454       amd64        Implementation of the Webots - ROS 2 interface
+ii  webots     
+```
+
+
+
+## 9.卸载软件包
+
+apt安装的包：
+
+```sh
+#卸载指令
+sudo apt remove <name>
+#如果想连同配置文件一起删除，可以使用 purge 命令：
+sudo apt purge <name>
+```
+
+deb安装的包：
+
+```sh
+#查找安装的name包
+dpkg -l | grep <name>
+#卸载指令
+sudo dpkg -r <name>
+#如果希望连同配置文件一起删除，可以使用 purge 选项：
+sudo dpkg --purge <name>
+```
+
+
+
+## 下载安装问题
+
+### 1.rosdep init问题
+
+·运行`sudo rosdep init`报错：
+
+`ERROR: cannot download default sources list from:
+https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list Website may be down.
+<urlopen error <urlopen error [Errno 111] Connection refused> (https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list)>`
+
+```
+sudo -E rosdep init 可以解决
+```
+
+如果提示：
+
+`ERROR: default sources list file already exists: /etc/ros/rosdep/sources.list.d/20-default.list
+Please delete if you wish to re-initialize`那就删掉这个文件，重新运行sudo rosdep init
+
+参考：https://github.com/ros-infrastructure/rosdep/issues/791

@@ -10,111 +10,9 @@
 
 
 
-## 2.c++调用matplotlib库（ubuntu）
-
-vscode和cmakelist配置：https://blog.csdn.net/H460367792/article/details/122760804
-
-误区：只配置cmake，不配置vscode，结果是在vscode的cmake工具编译后，在ubutnu终端中输入./可执行文件是可以运行的，但是没办法在vscode有右上角点击启动按钮进行运行
-
-在项目的include文件夹下拷贝一份matplotlib.h头文件
-
-cmake示例：
-
-```cmake
-cmake_minimum_required(VERSION 3.0)
-project(My_test_project)
-
-# 导入第三方库
-find_package(GeographicLib REQUIRED)
-include_directories(${GeographicLib_DIRS})
-find_package(PythonLibs REQUIRED)
-set(PYTHON_INCLUDE_DIRS /usr/include/python3.10)
-set(PYTHON_LIBRARIES /usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.so)
-include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(include)
-# 生成可执行文件
-add_executable(track src/track.cpp)
-# 链接库文件
-target_link_libraries(track ${GeographicLib_LIBRARIES} ${PYTHON_LIBRARIES})
-```
-
-vscode配置：
-
-c_cpp_properties.josn
-
-```c++
-{
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "/home/bit/not_ros_ws/include",
-                "/usr/include/python3.10",
-                "/usr/lib/python3/dist-packages/numpy/core/include/numpy",
-                // "/usr/local/include/GeographicLib"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.cmake-tools"
-        }
-    ],
-    "version": 4
-}
-```
-
-tasks.json
-
-```c++
-{
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "cppbuild",
-			"label": "C/C++: g++-11 生成活动文件",
-			"command": "/usr/bin/g++-11",
-			"args": [
-				"-fdiagnostics-color=always",
-				"-g",
-				"${file}",
-				"-o",
-				"${fileDirname}/${fileBasenameNoExtension}",
-				"-I",
-				"/usr/include/python3.10",
-				"-I",
-				"/usr/local/include/GeographicLib",
-				"-I",
-				"/home/bit/not_ros_ws/include",
-				"-I",
-				"/usr/lib/python3/dist-packages/numpy/core/include/numpy",
-				"-L",
-                // "/usr/local/lib",
-                // "-l","Geographiclib",
-				"-l","python3.10",
-				"-std=c++11"
-			],
-			"options": {
-				"cwd": "${fileDirname}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"detail": "编译器: /usr/bin/g++-11"
-		}
-	]
-}
-```
 
 
-
-## 3.matplotlib学习
+## 2.matplotlib学习
 
 1.想要显示出随时间变化的效果，轨迹不断在生长
 
@@ -152,7 +50,7 @@ plt::legend(); //加上这个legend后才能显示图例
 
 
 
-## 4.枚举类实现switch
+## 3.枚举类实现switch
 
 ```c++
 enum day = {mon , the , wed , thur , fri}
@@ -171,5 +69,110 @@ switch(today)
     default:
         break;
 }
+```
+
+
+
+## 4.调用M_PI
+
+```c++
+#define _USE_MATH_DEFINES
+include <cmath>
+```
+
+
+
+## 5.点的旋转
+
+平面坐标系中的任何一个点A（x1，y1），连接该点和原点组成一条向量，将这个向量按照a的旋转角度（逆时针旋转为正，顺时针旋转为负）旋转，旋转后的点B（x2，y2），二者之间的关系：
+
+`[x2, y2]T = R* [x1, y1]T `，其中R是旋转矩阵，`R = [cos(a) , -sin(a) ; sin(a) , cos(a) ]` 顺逆时针只影响a的正负，不影响表达式
+
+```c++
+Cartesian WayPoint::rotate(Cartesian p1, double angle_rad)
+{
+    Cartesian p2;
+    p2.x = cos(angle_rad)* p1.x - sin(angle_rad)* p1.y;
+    p2.y = sin(angle_rad)* p1.x + cos(angle_rad)* p1.y;
+    return p2;
+}
+```
+
+推导过程可以考虑直线的极坐标表示
+
+
+
+## 6.矩形的坐标变化
+
+思路：先计算最好计算的情况（矩形中心店和原点重合，边长和坐标轴平行），然后进行旋转+平移，得到四个点的坐标
+
+虚拟矩形中心定在坐标原点，长平行x轴，宽平行y轴
+
+真实矩形中心坐标A为（x1 , y1），长边和点A与原点连线组成的向量垂直
+
+- 计算中心点A的和x正半轴的夹角a，0-2π范围，均为正值
+- 输入四个顶点坐标，输入问题5中的旋转角度为**`（a-π/2）`**，严格推导过，四个象限都一样
+- 在四个顶点坐标x和y的基础上增加A的横纵坐标
+
+```c++
+//旋转矩阵，输入的旋转角度angle_rad为正时，绕着原点逆时针旋转，为负数时，顺时针旋转
+Cartesian rotate(Cartesian p1, double angle_rad)
+{
+    Cartesian p2;
+    p2.x = cos(angle_rad)* p1.x - sin(angle_rad)* p1.y;
+    p2.y = sin(angle_rad)* p1.x + cos(angle_rad)* p1.y;
+    return p2;
+}
+```
+
+
+
+```c++
+double angle_rad = atan2(centor.y,centor.x);
+if(angle_rad < 0){
+angle_rad += 2* M_PI;
+}
+left_down_rotate = rotate(left_down, angle_rad-M_PI/2);
+right_down_rotate = rotate(right_down, angle_rad-M_PI/2);
+right_up_rotate = rotate(right_up, angle_rad-M_PI/2);
+left_up_rotate = rotate(left_up, angle_rad-M_PI/2);
+
+left_down_trans = transform(left_down_rotate, centor.x, centor.y);
+right_down_trans = transform(right_down_rotate, centor.x, centor.y);
+right_up_trans = transform(right_up_rotate, centor.x, centor.y);
+left_up_trans = transform(left_up_rotate, centor.x, centor.y);
+```
+
+
+
+# Eigen库使用
+
+## 1.向量
+
+定义：VectorXd，类似c++里面的容器
+
+## 2.矩阵
+
+定义：matrixXd，可以动态扩展
+
+**构造函数**：
+
+```c++
+Eigen::MatrixXd matrix; //空的动态矩阵
+
+Eigen::MatrixXd matrix(rows, cols); //默认都是0
+Eigen::MatrixXd matrix(rows, cols).setConstant(num); //常数num填满
+
+Eigen::MatrixXd matrix = Eigen::MatrixXd::Identity(rows, cols); //单位矩阵
+```
+
+**函数**：
+
+```c++
+.setIdentity() //单位化
+.rows() //总行
+.cols() //总列
+.Zero() //0矩阵
+.block(i,j,row,col) = (MatrixXd)... //从i,j的位置开始替换,替换多少行(row),替换多少列(rol)，注意右边必须是一个矩阵，VectorXd不可以充当等式右值
 ```
 
