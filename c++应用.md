@@ -1,4 +1,4 @@
-# c++应用
+# c++开发
 
 主要来记录实际应用时，总结的解决方式
 
@@ -145,6 +145,21 @@ left_up_trans = transform(left_up_rotate, centor.x, centor.y);
 
 
 
+## 7.atan2妙用
+
+```c++
+atan2(y,x); //计算点（x，y）和x正半轴的夹角，返回值在-M_PI到M_PI之间的弧度制
+```
+
+妙用技巧：有时候其他方式计算出来的一些角度不一定在-M_PI到M_PI，就可以通过以下方式转化在这个区间内
+
+```c++
+phic=(1/g)*(ddxc*sin(psides)-ddyc*cos(psides));
+phic=atan2(sin(phic),cos(phic)); //这一行写的太妙了，计算一次sin和cos，再进行atan，就把区间转过来了
+```
+
+
+
 # Eigen库使用
 
 ## 1.向量
@@ -176,3 +191,70 @@ Eigen::MatrixXd matrix = Eigen::MatrixXd::Identity(rows, cols); //单位矩阵
 .block(i,j,row,col) = (MatrixXd)... //从i,j的位置开始替换,替换多少行(row),替换多少列(rol)，注意右边必须是一个矩阵，VectorXd不可以充当等式右值
 ```
 
+
+
+# visual studio开发
+
+
+
+## 1.动态库
+
+意义：类似于函数，相当于直接封装了一个模块为二进制文件，其他文件可以使用，在链接阶段就是将主可执行文件和所有的dll整合成一个完整的exe文件
+
+好处：可以写一些公共的算法，很多模块都可以公用这一个ddl
+
+### windows动态库
+
+1. ### 基本知识
+
+   后缀：dll
+
+2. ### 导出
+
+- 需要定义导出修饰符，意义是让其他文件使用dll时，可以找到对应的函数，如果不在函数前定义**导出修饰符**，那其他文件就没办法使用这个函数。参考微软官方说法：[演练：创建和使用自己的动态链接库 (C++) | Microsoft Learn](https://learn.microsoft.com/zh-cn/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp?view=msvc-150)
+
+  ```c++
+  #define MATHLIBRARY_API __declspec(dllexport)
+  
+  extern "C" MATHLIBRARY_API void fibonacci_init(
+  ```
+
+- 如果要导出类内的所有公共成员函数，可以在hpp/h文件中，在类名前加上导出修饰符
+
+  ```c++
+  class MOVER_FALL_EXPORT WsfFallMover : public WsfMover
+  ```
+
+  
+
+### linux动态库
+
+1. ### 基本知识
+
+   后缀：so
+
+2. ### 导出
+
+- 不用加导出修饰符，导出的so所有的函数都对其他文件开放
+
+
+
+## 2.添加路径
+
+visual studio添加方式有以下几种：
+
+- **在cmakelists里添加**，在这种格式下，添加的头文件和库文件路径都会自动添加到vs中
+
+- **在vs中添加**
+
+  1. **include文件**：右键对应的模块，点击最下面的属性，选择c/c++的常规，后面的附加包含目录点开新建
+
+     ![c++路径](D:\Learn\github\picture\c++路径.png)
+
+  2. **库文件**：点击左边链接器，同样输入，但是这个只能添加lib导入库，不能添加dll库，否则会出现link1009的报错
+
+     ![c++库文件路径](D:\Learn\github\picture\c++库文件路径.png)
+
+  
+
+  

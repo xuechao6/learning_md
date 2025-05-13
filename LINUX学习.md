@@ -323,7 +323,25 @@ target_link_libraries(想生成的可执行文件 ${库名称1_LIBRARIES} ${库�
 ############非必须##############
 ```
 
-文件流程：
+**find_package默认搜索路径：**
+
+如果提供了 `CMAKE_PREFIX_PATH` 或 `PackageName_DIR`，优先在这些路径中查找。
+
+1.系统默认路径：
+
+- `/usr/lib/`
+- `/usr/local/lib/`
+- `/usr/include/`
+- `/usr/local/include/`
+
+2.环境变量：
+
+- `CMAKE_PREFIX_PATH`：指定搜索的前缀路径。
+- `CMAKE_MODULE_PATH`：指定自定义模块文件的路径。
+
+
+
+**文件流程：**
 
 ```css
 project_Mytest/
@@ -436,3 +454,6 @@ sudo -E rosdep init 可以解决
 Please delete if you wish to re-initialize`那就删掉这个文件，重新运行sudo rosdep init
 
 参考：https://github.com/ros-infrastructure/rosdep/issues/791
+
+
+
